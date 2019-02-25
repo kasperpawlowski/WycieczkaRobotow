@@ -7,10 +7,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     MainWindow window;
-    window.showMaximized();
 
-    //Simulation simulation("SIMULATION", window.getSituationData());
-    //simulation.start();
+    Simulation simulation("SIMULATION", window.getSituationPtr());
+    simulation.start();
 
     return app.exec();
 }

@@ -1,50 +1,88 @@
 #include "basictypes.h"
 #include "simulation.h"
 
-Simulation::Simulation(QString n, SituationData *s) :
-                       name_(n), situation_(s)
+Simulation::Simulation(QString n, SituationScene *s) :
+                       name_(n)
 {
+    qRegisterMetaType<DisplayableObjectType>("DisplayableObjectType");
+    qRegisterMetaType<PositionType>("PositionType");
 
+    connect(this, SIGNAL(addObject(const int, const DisplayableObjectType)),
+            s, SLOT(addObject(const int, const DisplayableObjectType)));
+
+    connect(this, SIGNAL(deleteObject(const int)),
+            s, SLOT(deleteObject(const int)));
+
+    connect(this, SIGNAL(updateObjectPosition(const int, const PositionType)),
+            s, SLOT(updateObjectPosition(const int, const PositionType)));
 }
 
 void Simulation::run()
 {
-    DisplayableObjectType obj[4];
+    QThread::msleep(1000);
+    DisplayableObjectType obj[8];
 
-    obj[0].pixmapPosition = {300, 200, 0.0};
-    obj[1].pixmapPosition = {200, 300, 30.0};
-    obj[2].pixmapPosition = {100, 200, 60.0};
-    obj[3].pixmapPosition = {200, 100, 90.0};
+    obj[0].pixmapPosition = {580, 400, 0.0};
+    obj[1].pixmapPosition = {500, 400, 15.0};
+    obj[2].pixmapPosition = {450, 400, 30.0};
+    obj[3].pixmapPosition = {400, 400, 45.0};
+    obj[4].pixmapPosition = {0, 0, 0.0};
+    obj[5].pixmapPosition = {0, 817, -90.0};
+    obj[6].pixmapPosition = {1171, 817, -90.0};
+    obj[7].pixmapPosition = {1171, 0, 180.0};
 
-    for(int i=0; i < 4; i++)
+    for(int i=0; i < 8; i++)
     {
-        if(i == 0)
+        if((i == 0) || (i > 3))
         {
             obj[i].pixmapFilename   = "C:\\Users\\Kasper\\Desktop\\OKNO\\ZCpp\\WycieczkaRobotow\\pixmaps\\leader.png";
-            obj[i].pixmapDimensions = {48, 48};
+            obj[i].pixmapDimensions = {64, 64};
         }
         else
         {
             obj[i].pixmapFilename   = "C:\\Users\\Kasper\\Desktop\\OKNO\\ZCpp\\WycieczkaRobotow\\pixmaps\\troop.png";
             obj[i].pixmapDimensions = {32, 32};
         }
-        situation_->addObject(i, obj[i]);
+        emit addObject(i, obj[i]);
     }
 
     while(true)
     {
-        //QThread::msleep(1000);
-        for(int i=0; i<10000000; i++);
+        const int step  = 2;
+        const int sleep = 10;
 
-        PositionType tmp = obj[0].pixmapPosition;
-        obj[0].pixmapPosition = obj[3].pixmapPosition;
-        obj[1].pixmapPosition = obj[2].pixmapPosition;
-        obj[2].pixmapPosition = obj[3].pixmapPosition;
-        obj[3].pixmapPosition = tmp;
+        QThread::msleep(sleep);
 
-        for(int i=0; i < 4; i++)
+        for (int i = 0; i < 4; ++i)
         {
-            situation_->updateObjectPosition(i, obj[i].pixmapPosition);
+            if((obj[i].pixmapPosition.x < 600) && (obj[i].pixmapPosition.y == 400))
+            {
+                obj[i].pixmapPosition.a -= 15.0;
+                obj[i].pixmapPosition.x += step;
+            }
+            else
+            {
+                if((obj[i].pixmapPosition.y < 600) && (obj[i].pixmapPosition.x == 600))
+                {
+                    obj[i].pixmapPosition.y += step;
+                }
+                else
+                {
+                    if((obj[i].pixmapPosition.x > 400) && (obj[i].pixmapPosition.y == 600))
+                    {
+                        obj[i].pixmapPosition.a += 15.0;
+                        obj[i].pixmapPosition.x -= step;
+                    }
+                    else
+                    {
+                        if((obj[i].pixmapPosition.y > 400) && (obj[i].pixmapPosition.x == 400))
+                        {
+                            obj[i].pixmapPosition.y -= step;
+                        }
+                    }
+                }
+            }
+            emit updateObjectPosition(i, obj[i].pixmapPosition);
         }
     }
 }

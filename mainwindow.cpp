@@ -1,36 +1,31 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "situationdata.h"
+#include "situationscene.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui_(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
 
-    situation = new SituationData(ui->situationView);
+    view_      = new QGraphicsView(this);
+    formation_ = new FormationKeypad(10, 10, this);
+    path_      = new ScratchpadController(this);
+    simulationControlButton_ = new QPushButton(this);
 
-    //TODO
-//    DisplayableObjectType obj;
-//    for(int i=0; i< 3; i++)
-//    {
-//        obj.setPosition({100, (i+1)*64, i*45.0});
-//        if(i == 0)
-//        {
-//            obj.setPixmapFilename("C:\\Users\\Kasper\\Desktop\\OKNO\\ZCpp\\WycieczkaRobotow\\pixmaps\\leader.png");
-//            obj.setPixmapDimensions({48, 48});
-//        }
-//        else
-//        {
-//            obj.setPixmapFilename("C:\\Users\\Kasper\\Desktop\\OKNO\\ZCpp\\WycieczkaRobotow\\pixmaps\\troop.png");
-//            obj.setPixmapDimensions({32, 32});
-//        }
-//        situation->addObject(i, obj);
-//    }
+    mainLayout_ = new QGridLayout();
+    mainLayout_->addWidget(view_, 0, 0, 3, 1);
+    mainLayout_->addWidget(formation_, 2, 1);
+    mainLayout_->addWidget(path_, 1, 1);
+    mainLayout_->addWidget(simulationControlButton_, 0, 1);
+    ui_->centralWidget->setLayout(mainLayout_);
+    showMaximized();
+
+    situation_ = new SituationScene(view_, this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete situation;
-    delete ui;
+    delete mainLayout_;
+    delete ui_;
 }

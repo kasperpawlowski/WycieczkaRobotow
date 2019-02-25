@@ -1,22 +1,23 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <set>
-#include "situationdata.h"
+#include "situationscene.h"
 
-SituationData::SituationData(QGraphicsView* v) :
-    view_(v), scene_(new QGraphicsScene)
+SituationScene::SituationScene(QGraphicsView* view, QObject *parent) :
+    QGraphicsScene(parent), view_(view)
 {
-    scene_->setSceneRect(view_->geometry());
-    view_->setScene(scene_);
+    setSceneRect(view_->rect());
+    view_->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    view_->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    view_->setScene(this);
     objects_.clear();
 }
 
-SituationData::~SituationData()
+SituationScene::~SituationScene()
 {
-    delete scene_;
 }
 
-void SituationData::addObject(const int id, const DisplayableObjectType obj)
+void SituationScene::addObject(const int id, const DisplayableObjectType obj)
 {
     if(!isAddedObjectValid(id, obj))
     {
@@ -27,8 +28,7 @@ void SituationData::addObject(const int id, const DisplayableObjectType obj)
     scaled_pixmap = scaled_pixmap.scaledToWidth(obj.pixmapDimensions.width);
     scaled_pixmap = scaled_pixmap.scaledToHeight(obj.pixmapDimensions.height);
 
-    objects_.insert(std::pair<int, QGraphicsPixmapItem*>
-                    (id, scene_->addPixmap(scaled_pixmap)));
+    objects_.insert(SOMapPair(id, addPixmap(scaled_pixmap)));
 
     QGraphicsPixmapItem* inserted = objects_.at(id);
 
@@ -36,18 +36,18 @@ void SituationData::addObject(const int id, const DisplayableObjectType obj)
     setPixmapPosition(objects_.at(id), obj.pixmapPosition);
 }
 
-void SituationData::deleteObject(const int id)
+void SituationScene::deleteObject(const int id)
 {
     if(!objectExists(id))
     {
         emit cannotDeleteObject(id);
     }
 
-    scene_->removeItem(objects_.at(id));
-    scene_->update();
+    removeItem(objects_.at(id));
+    update();
 }
 
-void SituationData::updateObjectPosition(const int id, const PositionType pos)
+void SituationScene::updateObjectPosition(const int id, const PositionType pos)
 {
     if(!objectExists(id))
     {
@@ -59,25 +59,25 @@ void SituationData::updateObjectPosition(const int id, const PositionType pos)
     }
 }
 
-void SituationData::situationRectDimensionsRequest(const int id)
+void SituationScene::situationRectDimensionsRequest(const int id)
 {
     RectDimentionsType dim;
-    dim.height = int(scene_->sceneRect().height());
-    dim.width  = int(scene_->sceneRect().width());
+    dim.height = int(sceneRect().height());
+    dim.width  = int(sceneRect().width());
     emit situationRectDimensions(id, dim);
 }
 
-void SituationData::setPixmapPosition(QGraphicsPixmapItem* pixmap, const PositionType& pos)
+void SituationScene::setPixmapPosition(QGraphicsPixmapItem* pixmap, const PositionType& pos)
 {
-    QRectF rect(scene_->sceneRect());
+    QRectF rect(sceneRect());
 
-    pixmap->setX(pos.x + rect.x() - pixmap->boundingRect().width()/2);
-    pixmap->setY(-(pos.y - rect.height()) + rect.y() - pixmap->boundingRect().width()/2);
+    pixmap->setX(pos.x - pixmap->boundingRect().width()/2);
+    pixmap->setY(-(pos.y - rect.height()) - pixmap->boundingRect().width()/2);
     pixmap->setRotation(90.0 - pos.a);
-    scene_->update();
+    update();
 }
 
-bool SituationData::objectExists(const int id)
+bool SituationScene::objectExists(const int id) const
 {
     if(objects_.find(id) == objects_.end())
     {
@@ -86,7 +86,7 @@ bool SituationData::objectExists(const int id)
     return true;
 }
 
-bool SituationData::isAddedObjectValid(const int id, const DisplayableObjectType& obj)
+bool SituationScene::isAddedObjectValid(const int id, const DisplayableObjectType& obj) const
 {
     bool result = true;
     QFileInfo file(QString::fromStdString(obj.pixmapFilename));
@@ -95,7 +95,7 @@ bool SituationData::isAddedObjectValid(const int id, const DisplayableObjectType
     if(objectExists(id))
     {
         result = false;
-        qCritical() << "The object with very same ID already exists. ID = " << id;
+        qWarning() << "The object with very same ID already exists. ID = " << id;
     }
 
     if(!file.exists() ||
@@ -103,14 +103,14 @@ bool SituationData::isAddedObjectValid(const int id, const DisplayableObjectType
        (supported_files.find(file.suffix()) == supported_files.end()))
     {
         result = false;
-        qCritical() << "There is a problem with the pixmap file of the object being added";
+        qWarning() << "There is a problem with the pixmap file of the object being added";
     }
 
     if((obj.pixmapDimensions.width  == 0) ||
        (obj.pixmapDimensions.height == 0))
     {
         result = false;
-        qCritical() << "The object being added must have dimensions greater than zero";
+        qWarning() << "The object being added must have dimensions greater than zero";
     }
     return result;
 }
