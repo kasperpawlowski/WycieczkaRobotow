@@ -10,6 +10,7 @@
  *        the scratchpad and controls it
  *
  * "Clear" button serves for instant clearing of the path drawn on the scratchpad.
+ *
  * "Accept" button serves for generation of a file that contains information about
  * the points that form the drawn path.
  */
@@ -21,7 +22,12 @@ public:
      * \brief ScratchpadController constructs a new ScratchpadController
      * \param[in] parent a parent widget
      */
-    ScratchpadController(QWidget *parent = nullptr);
+    explicit ScratchpadController(QWidget *parent = nullptr);
+
+    /*!
+     * \brief ~ScratchpadController destructs the ScratchpadController
+     */
+    ~ScratchpadController() override {}
 
 private slots:
     void acceptButtonClicked();
@@ -29,9 +35,9 @@ private slots:
     void newDrawingAppeared();
 
 private:
-    enum GenerationState {NOT_GENERATED_YET, NOT_GENERATED_INVALID, GENERATED};
     void refreshAcceptButtonState();
 
+    enum GenerationState {NOT_GENERATED_YET, NOT_GENERATED_INVALID, GENERATED};
     Scratchpad       *scratchpad_;
     GenerationState  generationState_;
     QPushButton      *acceptButton_;

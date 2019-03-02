@@ -3,9 +3,14 @@
 #include "scratchpad.h"
 
 Scratchpad::Scratchpad(QWidget *parent) :
-    QWidget(parent), color_(Qt::blue), thickness_(3),
-    lastPosition_({-1, -1}), alreadyDrawn_(false)
+    QWidget(parent), color_(Qt::blue), thickness_(3), alreadyDrawn_(false)
 {
+    if(!parent)
+    {
+        qCritical() << "Scratchpad: parent cannot be nullptr";
+        return;
+    }
+
     setAttribute(Qt::WA_OpaquePaintEvent);
     image_ = QImage(parent->size(), QImage::Format_RGB32);
     clearScratchpad();
@@ -15,7 +20,7 @@ bool Scratchpad::isDrawingValid() const
 {
     if(!alreadyDrawn_)
     {
-        qWarning() << "There is nothing drawn yet";
+        qWarning() << "Scratchpad: there is nothing drawn yet";
         return  false;
     }
     return true;
@@ -29,7 +34,7 @@ void Scratchpad::clearScratchpad()
     update();
 }
 
-bool Scratchpad::generatePathData()
+bool Scratchpad::generatePathData() const
 {
     return true;
 }
@@ -58,7 +63,7 @@ void Scratchpad::mouseMoveEvent(QMouseEvent *event)
         painter.setPen(QPen(color_, thickness_, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
         painter.drawLine(lastPosition_, event->pos());
 
-        // for better performance update only a part of the widget
+        // for better performance update only the related part of the widget
         int r = painter.pen().width() / 2;
         const QRect rect = QRect(lastPosition_, event->pos()).normalized().adjusted(-r, -r, +r, +r);
         update(rect);

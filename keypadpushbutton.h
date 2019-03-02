@@ -8,7 +8,7 @@
  *         with ability to reemit signals when clicked
  *
  * An instance of this class has attributes that describe its position (row and
- * column) in a keypad which is an owner of that instance. Signals and slots are
+ * column) in a keypad which may be an owner of that instance. Signals and slots are
  * connected in a way that when the button is clicked, it reemits clicked signal
  * with information about its position.
  * It helps to handle signals from multiple buttons that serve for the same or similar action.
@@ -25,6 +25,11 @@ public:
      */
     explicit KeypadPushButton(const unsigned int row, const unsigned int col,
                               QWidget *parent = nullptr);
+
+    /*!
+     * \brief ~KeypadPushButton destructs the KeypadPushButton
+     */
+    ~KeypadPushButton() override {}
 
 signals:
     /*!

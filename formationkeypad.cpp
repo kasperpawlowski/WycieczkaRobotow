@@ -11,7 +11,8 @@ FormationKeypad::FormationKeypad(const unsigned int rows, const unsigned int col
     int widget_size = int(0.45*QDesktopWidget().screenGeometry(this).height());
     setFixedSize(widget_size, widget_size);
 
-    // creates a container for to be created bi-state push buttons
+    // creates a container for to be created bi-state push buttons,
+    // thanks to that we can refer to a particular element with square brackets
     formationButtons_ = ButtonsContainer(rows_, ButtonsVector(cols_, nullptr));
 
     QGridLayout* keypad_layout = new QGridLayout(this);
@@ -55,13 +56,13 @@ bool FormationKeypad::isFormationValid() const
 
     if(!any_object_in_formation)
     {
-        qWarning() << "There is no object in a formation";
+        qWarning() << "Formation Keypad: there is no object in a formation";
     }
 
     return any_object_in_formation;
 }
 
-bool FormationKeypad::generateFormationData()
+bool FormationKeypad::generateFormationData() const
 {
     return true;
 }

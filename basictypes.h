@@ -1,10 +1,11 @@
 #ifndef BASICTYPES_H
 #define BASICTYPES_H
 
-#include <string>
+#include <QMetaType>
+#include <QDataStream>
 
 /*!
- * \brief The RectDimentionsType struct describes dimensions of a rectangle
+ * \brief Describes dimensions of a rectangle
  */
 struct RectDimentionsType
 {
@@ -13,7 +14,7 @@ struct RectDimentionsType
 };
 
 /*!
- * \brief The PositionType struct describes position of an object in a plane
+ * \brief Describes position of an object in a plane
  *
  * \param x holds distance to the y axis
  * \param y holds distance to the x axis
@@ -27,8 +28,8 @@ struct PositionType
 };
 
 /*!
- * \brief The DisplayableObjectType struct groups all the parameters needed for
- *        a pixmap object to be correctly displayed
+ * \brief Groups all the parameters needed for a pixmap object to be correctly
+ *        displayed
  *
  * \param pixmapPosition holds position of an object
  * \param pixmapFilename holds path to the file representing a pixmap
@@ -37,8 +38,43 @@ struct PositionType
 struct DisplayableObjectType
 {
     PositionType       pixmapPosition;
-    std::string        pixmapFilename;
+    QString            pixmapFilename;
     RectDimentionsType pixmapDimensions;
 };
+
+/*!
+ * \brief operator needed for Qt Remote Object concept to work properly
+ */
+QDataStream& operator<<(QDataStream& out, const RectDimentionsType& rect);
+
+/*!
+ * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ */
+QDataStream& operator>>(QDataStream& stream, RectDimentionsType& rect);
+
+/*!
+ * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ */
+QDataStream& operator<<(QDataStream& out, const PositionType& pos);
+
+/*!
+ * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ */
+QDataStream& operator>>(QDataStream& stream, PositionType& pos);
+
+/*!
+ * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ */
+QDataStream& operator<<(QDataStream& out, const DisplayableObjectType& obj);
+
+/*!
+ * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ */
+QDataStream& operator>>(QDataStream& stream, DisplayableObjectType& obj);
+
+// Declare new types for management in meta-object system
+Q_DECLARE_METATYPE(RectDimentionsType);
+Q_DECLARE_METATYPE(PositionType);
+Q_DECLARE_METATYPE(DisplayableObjectType);
 
 #endif // BASICTYPES_H

@@ -6,10 +6,10 @@
 
 /*!
  * \brief The Scratchpad class is a widget responsible for providing means
- *        for the user to draw a curve ("path") on a scratchpad
+ *        for the user to draw a curve (path) on a scratchpad
  *
  * The class handles the mouse events that occur when user attempts to draw
- * a path on the scrathpad. Path can be drawn by left click and move of the mouse
+ * a path on the scratchpad. Path can be drawn by left click and move of the mouse
  * while the left button still pressed. Only one path at a time can be drawn on
  * the scratchpad.
  */
@@ -21,9 +21,14 @@ public:
      * \brief Scratchpad constructs a new Scratchpad
      * \param[in] parent a parent widget
      *
-     * This class must have a parent as its size depends on it.
+     * This class must have a parent as size of the scratchpad depends on it.
      */
     explicit Scratchpad(QWidget *parent);
+
+    /*!
+     * \brief ~Scratchpad destructs the Scratchpad
+     */
+    ~Scratchpad() override {}
 
     /*!
      * \brief setPenColor sets a color of a drawing device
@@ -60,12 +65,12 @@ public:
 
     /*!
      * \brief generatePathData generates a file that contains information
-     *        about points that form the drawn path
+     *        about points that form the path being drawn
      * \return true on success, false otherwise
      *
      * Assumes that validity of the path has been checked.
      */
-    bool generatePathData();
+    bool generatePathData() const;
 
 signals:
     /*!
@@ -74,10 +79,10 @@ signals:
     void mouseCorrectReleaseEvent();
 
 private slots:
-    void paintEvent(QPaintEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
     Scratchpad() = delete;

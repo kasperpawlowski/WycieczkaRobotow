@@ -1,7 +1,6 @@
-#ifndef SITUATIONDATA_H
-#define SITUATIONDATA_H
+#ifndef SITUATIONSCENE_H
+#define SITUATIONSCENE_H
 
-#include <QObject>
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include "basictypes.h"
@@ -9,6 +8,9 @@
 /*!
  * \brief The SituationScene class is a widget that allows to display various
  *        pixmaps at defined position on the screen.
+ *
+ * The class derives from QGraphicsScene which serves as a container for QGraphicsItems.
+ * It is used together with QGraphicsView for visualizing graphical items.
  */
 class SituationScene : public QGraphicsScene
 {
@@ -19,21 +21,25 @@ public:
      * \param[in] view a QGraphicsView object that the widget will be connected to
      * \param[in] parent a parent widget
      */
-    explicit SituationScene(QGraphicsView* view, QObject *parent = nullptr);
-    ~SituationScene();
+    explicit SituationScene(QGraphicsView *const view, QObject *parent = nullptr);
+
+    /*!
+     * \brief ~SituationScene destructs the SituationScene
+     */
+    ~SituationScene() override {}
 
 signals:
     /*!
      * \brief cannotAddObject emitted when a new object cannot be added
-     * \param[in] id an identifier of a object
+     * \param[in] id an identifier of an object
      *
-     * Emmited when provided object is not valid (\sa isAddedObjectValid()).
+     * Emmited when provided object is not valid.
      */
     void cannotAddObject(const int id);
 
     /*!
      * \brief cannotDeleteObject emmitted when the object cannot be deleted
-     * \param[in] id an identifier of a object
+     * \param[in] id an identifier of an object
      *
      * Emitted when the object of provided identifier does not exist (has not been
      * added yet).
@@ -42,7 +48,7 @@ signals:
 
     /*!
      * \brief cannotUpdateObjectPosition emmited when the object cannot be updated
-     * \param[in] id an identifier of a object
+     * \param[in] id an identifier of an object
      *
      * Emitted when the object of provided identifier does not exist (has not been
      * added yet).
@@ -50,16 +56,20 @@ signals:
     void cannotUpdateObjectPosition(const int id);
 
     /*!
-     * \brief situationRectDimensions emitted when requested for dimensions of
-     *        the visualization rectangle.
-     * \param[in] id an identifier of the object that sent the request
+     * \brief situationRectDimensionsInfo emitted when requested for dimensions of
+     *        the visualization area
      * \param[in] dim dimensions of the visualization area
      */
-    void situationRectDimensions(const int id, const RectDimentionsType dim);
+    void situationRectDimensionsInfo(const RectDimentionsType dim);
 
 public slots:
     /*!
-     * \brief addObject adds a displayable object so it can be displayed
+     * \brief clear clears the scene
+     */
+    void clear();
+
+    /*!
+     * \brief addObject adds a displayable object to the scene
      * \param[in] id an identifier of the added object
      * \param[in] obj the added object
      */
@@ -80,17 +90,12 @@ public slots:
     void updateObjectPosition(const int id, const PositionType pos);
 
     /*!
-     * \brief situationRectDimensionsRequest emits signal that holds dimensions
-     *        of visualization rectangle (\sa situationRectDimensions())
-     * \param[in] id an identifier of the object that requests dimensions of
-     *            visualization area
+     * \brief situationRectDimensions emits signal that holds dimensions
+     *        of visualization area
      */
-    void situationRectDimensionsRequest(const int id);
+    void situationRectDimensions();
 
 private:
-    typedef std::map<int, QGraphicsPixmapItem*>  SOContainer;
-    typedef std::pair<int, QGraphicsPixmapItem*> SOMapPair;
-
     SituationScene() = delete;
     void setPixmapPosition(QGraphicsPixmapItem* pixmap, const PositionType& pos);
     bool objectExists(const int id) const;
@@ -100,13 +105,15 @@ private:
      * \param[in] id an identifier requested for an object being added
      * \param[in] obj an object being added
      * \return true when the object of provided id does not exist (has not been
-     *         added yet, AND the pixmap file exists and has supported format, AND
+     *         added yet), AND the pixmap file exists and has supported format, AND
      *         the pixmap dimensions are different than zero, otherwise false
      */
     bool isAddedObjectValid(const int id, const DisplayableObjectType& obj) const;
 
-    QGraphicsView*  view_;
-    SOContainer     objects_;
+    typedef std::map<int, QGraphicsPixmapItem*>  SOContainer;
+    typedef std::pair<int, QGraphicsPixmapItem*> SOMapPair;
+    QGraphicsView* view_;
+    SOContainer    objects_;
 };
 
-#endif // SITUATIONDATA_H
+#endif // SITUATIONSCENE_H

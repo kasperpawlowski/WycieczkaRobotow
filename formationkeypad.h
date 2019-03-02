@@ -6,11 +6,13 @@
 
 /*!
  * \brief The FormationKeypad class is a keypad widget that allows the user to
- *        define a desired formation of pushed buttons.
+ *        define a desired formation of pushed buttons
  *
- * A square keypad is formed in a grid. Contains (rows_ x cols_) bi-state push buttons
- * that let the user to define a desired formation pattern.
+ * A square keypad is formed in a grid. Contains (rows_ x cols_) of bi-state push
+ * buttons (KeypadPushButton) that let the user to define a desired formation pattern.
+ *
  * "Clear" button serves for instant clearing of the pattern that have been pushed.
+ *
  * "Accept" button serves for generation of a file that contains information about
  * a position of the pushed buttons.
  */
@@ -28,6 +30,11 @@ public:
                              QWidget *parent = nullptr);
 
     /*!
+     * \brief ~FormationKeypad destructs the FormationKeypad
+     */
+    ~FormationKeypad() override {}
+
+    /*!
      * \brief isFormationValid checks whether any bi-state push button has been pushed
      * \return true when any button has been pushed, false otherwise
      */
@@ -39,7 +46,7 @@ public:
      *        formation has been checked
      * \return true on success, false otherwise
      */
-    virtual bool generateFormationData();
+    virtual bool generateFormationData() const;
 
 private slots:
     void buttonClicked(const unsigned int row, const unsigned int col);
@@ -47,13 +54,13 @@ private slots:
     void clearButtonClicked();
 
 private:
-    typedef std::vector<KeypadPushButton*> ButtonsVector;
-    typedef std::vector<ButtonsVector>     ButtonsContainer;
-    enum GenerationState {NOT_GENERATED_YET, NOT_GENERATED_INVALID, GENERATED};
     FormationKeypad() = delete;
     void refreshAcceptButtonState();
     void clearKeypad();
 
+    typedef std::vector<KeypadPushButton*> ButtonsVector;
+    typedef std::vector<ButtonsVector>     ButtonsContainer;
+    enum GenerationState {NOT_GENERATED_YET, NOT_GENERATED_INVALID, GENERATED};
     unsigned int     rows_;
     unsigned int     cols_;
     GenerationState  generationState_;

@@ -19,16 +19,35 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
+    /*!
+     * \brief MainWindow constructs a new MainWindow
+     * \param[in] parent a parent widget
+     */
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
 
     /*!
-     * \brief getSituationPtr TODO
-     * \return
+     * \brief ~MainWindow destructs the MainWindow
      */
-    SituationScene* getSituationPtr() const  {return situation_;}
+    ~MainWindow();
+
+signals:
+    /*!
+     * \brief SimulationStartRequest emitted when "Start simulation" button clicked
+     * \param[in] scene a pointer to the scene that holds objects to be displayed
+     */
+    void SimulationStartRequest(const SituationScene *const scene);
+
+    /*!
+     * \brief SimulationStopRequest emitted when "Stop simulation" button clicked
+     */
+    void SimulationStopRequest();
+
+private slots:
+    void clicked();
 
 private:
+    void refreshSimulationControlButton();
+
     Ui::MainWindow       *ui_;
     QGridLayout          *mainLayout_;
     QGraphicsView        *view_;
@@ -36,6 +55,7 @@ private:
     FormationKeypad      *formation_;
     ScratchpadController *path_;
     QPushButton          *simulationControlButton_;
+    bool                 simulationStarted_;
 };
 
 #endif // MAINWINDOW_H
