@@ -33,8 +33,9 @@ public:
     /*!
      * \brief SimulationInterface destructs the SimulationInterface
      */
-    ~SimulationInterface();
+    ~SimulationInterface() {}
 
+public slots:
     /*!
      * \brief clearReqReemit reemits a clear request signal connected to
      *        the appropriate slot of the scene
@@ -99,9 +100,14 @@ public:
      */
     virtual void cannotUpdateObjectPositionReemit(const int id);
 
+    /*!
+     * \brief simulationFinishedReemit reemits a simulation finished signal that should be
+     *        sent when the simulation is finished
+     */
+    virtual void simulationFinishedReemit();
+
 private:
-    typedef std::vector<QMetaObject::Connection> ConnectionsContainer;
-    ConnectionsContainer connections_;
+    SimulationInterface() = delete;
 };
 
 #endif // SIMULATIONINTERFACE_H

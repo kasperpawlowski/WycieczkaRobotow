@@ -28,25 +28,27 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
+    common/basictypes.cpp \
     formationkeypad.cpp \
+    keypadpushbutton.cpp \
     situationscene.cpp \
     scratchpad.cpp \
     scratchpadcontroller.cpp \
-    keypadpushbutton.cpp \
-    simulationcontroller.cpp \
-    basictypes.cpp \
-    simulationinterface.cpp
+    simulationinterface.cpp \
+    simulationcontroller.cpp
 
 HEADERS += \
         mainwindow.h \
-    basictypes.h \
+    common/basictypes.h \
     formationkeypad.h \
+    keypadpushbutton.h \
     situationscene.h \
     scratchpad.h \
     scratchpadcontroller.h \
-    keypadpushbutton.h \
+    simulationinterface.h \
+    common/rep_basesimulationinterface_source.h \
     simulationcontroller.h \
-    simulationinterface.h
+    common/baserobotcrtp.h
 
 FORMS += \
         mainwindow.ui
@@ -56,7 +58,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    basesimulationinterface.rep
-
-REPC_SOURCE = basesimulationinterface.rep
+REPC_SOURCE = common/basesimulationinterface.rep

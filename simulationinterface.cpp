@@ -3,41 +3,35 @@
 SimulationInterface::SimulationInterface(const SituationScene *const situation, QObject *parent) :
     BaseSimulationInterfaceSource(parent)
 {
-    connections_.push_back(connect(this, SIGNAL(clearReqFwd()),
-                                   situation, SLOT(clear())));
+    connect(this, SIGNAL(clearReqFwd()),
+            situation, SLOT(clear()));
 
-    connections_.push_back(connect(this, SIGNAL(addObjectReqFwd(const int, const DisplayableObjectType)),
-                                   situation, SLOT(addObject(const int, const DisplayableObjectType))));
+    connect(this, SIGNAL(addObjectReqFwd(const int, const DisplayableObjectType)),
+            situation, SLOT(addObject(const int, const DisplayableObjectType)));
 
-    connections_.push_back(connect(this, SIGNAL(deleteObjectReqFwd(const int)),
-                                   situation, SLOT(deleteObject(const int))));
+    connect(this, SIGNAL(deleteObjectReqFwd(const int)),
+            situation, SLOT(deleteObject(const int)));
 
-    connections_.push_back(connect(this, SIGNAL(updateObjectPositionReqFwd(const int, const PositionType)),
-                                   situation, SLOT(updateObjectPosition(const int, const PositionType))));
+    connect(this, SIGNAL(updateObjectPositionReqFwd(const int, const PositionType)),
+            situation, SLOT(updateObjectPosition(const int, const PositionType)));
 
-    connections_.push_back(connect(this, SIGNAL(situationRectDimensionsReqFwd()),
-                                   situation, SLOT(situationRectDimensions())));
+    connect(this, SIGNAL(situationRectDimensionsReqFwd()),
+            situation, SLOT(situationRectDimensions()));
 
-    connections_.push_back(connect(situation, SIGNAL(situationRectDimensionsInfo(const RectDimentionsType)),
-                                   this, SLOT(situationRectDimensionsInfoReemit(const RectDimentionsType))));
+    connect(situation, SIGNAL(situationRectDimensionsInfo(const RectDimentionsType)),
+            this, SLOT(situationRectDimensionsInfoReemit(const RectDimentionsType)));
 
-    connections_.push_back(connect(situation, SIGNAL(cannotAddObject(const int)),
-                                   this, SLOT(cannotAddObjectReemit(const int))));
+    connect(situation, SIGNAL(cannotAddObject(const int)),
+            this, SLOT(cannotAddObjectReemit(const int)));
 
-    connections_.push_back(connect(situation, SIGNAL(cannotDeleteObject(const int)),
-                                   this, SLOT(cannotDeleteObjectReemit(const int))));
+    connect(situation, SIGNAL(cannotDeleteObject(const int)),
+            this, SLOT(cannotDeleteObjectReemit(const int)));
 
-    connections_.push_back(connect(situation, SIGNAL(cannotUpdateObjectPosition(const int)),
-                                   this, SLOT(cannotUpdateObjectPositionReemit(const int))));
-}
+    connect(situation, SIGNAL(cannotUpdateObjectPosition(const int)),
+            this, SLOT(cannotUpdateObjectPositionReemit(const int)));
 
-SimulationInterface::~SimulationInterface()
-{
-    for(ConnectionsContainer::iterator it = connections_.begin(); it != connections_.end(); ++it)
-    {
-        disconnect(*it);
-    }
-    connections_.clear();
+    connect(this, SIGNAL(simulationFinishedFwd()),
+            situation, SLOT(simulationFinished()));
 }
 
 void SimulationInterface::clearReqReemit()
@@ -83,4 +77,9 @@ void SimulationInterface::cannotDeleteObjectReemit(const int id)
 void SimulationInterface::cannotUpdateObjectPositionReemit(const int id)
 {
     emit cannotUpdateObjectPositionFwd(id);
+}
+
+void SimulationInterface::simulationFinishedReemit()
+{
+    emit simulationFinishedFwd();
 }

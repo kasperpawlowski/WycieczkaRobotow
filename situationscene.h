@@ -62,6 +62,11 @@ signals:
      */
     void situationRectDimensionsInfo(const RectDimentionsType dim);
 
+    /*!
+     * \brief simulationFinishAnnouncement emitted when simulation is finished
+     */
+    void simulationFinishAnnouncement();
+
 public slots:
     /*!
      * \brief clear clears the scene
@@ -94,6 +99,11 @@ public slots:
      *        of visualization area
      */
     void situationRectDimensions();
+
+    /*!
+     * \brief simulationFinished emits a signal that announces the end of simulation
+     */
+    void simulationFinished();
 
 private:
     SituationScene() = delete;

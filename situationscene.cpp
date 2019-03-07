@@ -80,6 +80,11 @@ void SituationScene::situationRectDimensions()
     emit situationRectDimensionsInfo(dim);
 }
 
+void SituationScene::simulationFinished()
+{
+    emit simulationFinishAnnouncement();
+}
+
 void SituationScene::setPixmapPosition(QGraphicsPixmapItem* pixmap, const PositionType& pos)
 {
     QRectF rect = sceneRect();

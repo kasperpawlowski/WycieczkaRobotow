@@ -18,15 +18,15 @@ class BaseSimulationInterfaceSource : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_TYPE, "BaseSimulationInterface")
-    Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_SIGNATURE, "fbcc656e4c9c8f8cf07304b4f956d94fca83fbd3")
+    Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_SIGNATURE, "ac8eb22012f29d013df92e6baaae5cd8676835b0")
 
 public:
     explicit BaseSimulationInterfaceSource(QObject *parent = nullptr) : QObject(parent)
     {
-        qRegisterMetaType<PositionType>();
-        qRegisterMetaTypeStreamOperators<PositionType>();
         qRegisterMetaType<DisplayableObjectType>();
         qRegisterMetaTypeStreamOperators<DisplayableObjectType>();
+        qRegisterMetaType<PositionType>();
+        qRegisterMetaTypeStreamOperators<PositionType>();
         qRegisterMetaType<RectDimentionsType>();
         qRegisterMetaTypeStreamOperators<RectDimentionsType>();
 
@@ -46,6 +46,7 @@ Q_SIGNALS:
     void cannotAddObjectFwd(const int __repc_variable_1);
     void cannotDeleteObjectFwd(const int __repc_variable_1);
     void cannotUpdateObjectPositionFwd(const int __repc_variable_1);
+    void simulationFinishedFwd();
 
 public Q_SLOTS:
     virtual void clearReqReemit() = 0;
@@ -57,6 +58,7 @@ public Q_SLOTS:
     virtual void cannotAddObjectReemit(const int __repc_variable_1) = 0;
     virtual void cannotDeleteObjectReemit(const int __repc_variable_1) = 0;
     virtual void cannotUpdateObjectPositionReemit(const int __repc_variable_1) = 0;
+    virtual void simulationFinishedReemit() = 0;
 
 private:
     friend class QT_PREPEND_NAMESPACE(QRemoteObjectNode);
@@ -92,7 +94,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         Q_UNUSED(object);
         m_enums[0] = 0;
         m_properties[0] = 0;
-        m_signals[0] = 9;
+        m_signals[0] = 10;
         m_signals[1] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::clearReqFwd, static_cast<void (QObject::*)()>(0),m_signalArgCount+0,&m_signalArgTypes[0]);
         m_signals[2] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::addObjectReqFwd, static_cast<void (QObject::*)(int,DisplayableObjectType)>(0),m_signalArgCount+1,&m_signalArgTypes[1]);
         m_signals[3] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::deleteObjectReqFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+2,&m_signalArgTypes[2]);
@@ -102,7 +104,8 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         m_signals[7] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotAddObjectFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+6,&m_signalArgTypes[6]);
         m_signals[8] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotDeleteObjectFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+7,&m_signalArgTypes[7]);
         m_signals[9] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotUpdateObjectPositionFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+8,&m_signalArgTypes[8]);
-        m_methods[0] = 9;
+        m_signals[10] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::simulationFinishedFwd, static_cast<void (QObject::*)()>(0),m_signalArgCount+9,&m_signalArgTypes[9]);
+        m_methods[0] = 10;
         m_methods[1] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::clearReqReemit, static_cast<void (QObject::*)()>(0),"clearReqReemit()",m_methodArgCount+0,&m_methodArgTypes[0]);
         m_methods[2] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::addObjectReqReemit, static_cast<void (QObject::*)(int,DisplayableObjectType)>(0),"addObjectReqReemit(int,DisplayableObjectType)",m_methodArgCount+1,&m_methodArgTypes[1]);
         m_methods[3] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::deleteObjectReqReemit, static_cast<void (QObject::*)(int)>(0),"deleteObjectReqReemit(int)",m_methodArgCount+2,&m_methodArgTypes[2]);
@@ -112,6 +115,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         m_methods[7] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotAddObjectReemit, static_cast<void (QObject::*)(int)>(0),"cannotAddObjectReemit(int)",m_methodArgCount+6,&m_methodArgTypes[6]);
         m_methods[8] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotDeleteObjectReemit, static_cast<void (QObject::*)(int)>(0),"cannotDeleteObjectReemit(int)",m_methodArgCount+7,&m_methodArgTypes[7]);
         m_methods[9] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotUpdateObjectPositionReemit, static_cast<void (QObject::*)(int)>(0),"cannotUpdateObjectPositionReemit(int)",m_methodArgCount+8,&m_methodArgTypes[8]);
+        m_methods[10] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::simulationFinishedReemit, static_cast<void (QObject::*)()>(0),"simulationFinishedReemit()",m_methodArgCount+9,&m_methodArgTypes[9]);
     }
 
     QString name() const override { return m_name; }
@@ -190,6 +194,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         case 6: return QByteArrayLiteral("cannotAddObjectFwd(int)");
         case 7: return QByteArrayLiteral("cannotDeleteObjectFwd(int)");
         case 8: return QByteArrayLiteral("cannotUpdateObjectPositionFwd(int)");
+        case 9: return QByteArrayLiteral("simulationFinishedFwd()");
         }
         return QByteArrayLiteral("");
     }
@@ -211,6 +216,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         case 6: return QByteArrayLiteral("cannotAddObjectReemit(int)");
         case 7: return QByteArrayLiteral("cannotDeleteObjectReemit(int)");
         case 8: return QByteArrayLiteral("cannotUpdateObjectPositionReemit(int)");
+        case 9: return QByteArrayLiteral("simulationFinishedReemit()");
         }
         return QByteArrayLiteral("");
     }
@@ -236,20 +242,21 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         case 6: return QByteArrayLiteral("void");
         case 7: return QByteArrayLiteral("void");
         case 8: return QByteArrayLiteral("void");
+        case 9: return QByteArrayLiteral("void");
         }
         return QByteArrayLiteral("");
     }
-    QByteArray objectSignature() const override { return QByteArray{"fbcc656e4c9c8f8cf07304b4f956d94fca83fbd3"}; }
+    QByteArray objectSignature() const override { return QByteArray{"ac8eb22012f29d013df92e6baaae5cd8676835b0"}; }
 
     int m_enums[1];
     int m_properties[1];
-    int m_signals[10];
-    int m_methods[10];
+    int m_signals[11];
+    int m_methods[11];
     const QString m_name;
-    int m_signalArgCount[9];
-    const int* m_signalArgTypes[9];
-    int m_methodArgCount[9];
-    const int* m_methodArgTypes[9];
+    int m_signalArgCount[10];
+    const int* m_signalArgTypes[10];
+    int m_methodArgCount[10];
+    const int* m_methodArgTypes[10];
 };
 
 QT_BEGIN_NAMESPACE

@@ -35,7 +35,7 @@ signals:
      * \brief SimulationStartRequest emitted when "Start simulation" button clicked
      * \param[in] scene a pointer to the scene that holds objects to be displayed
      */
-    void SimulationStartRequest(const SituationScene *const scene);
+    void SimulationStartRequest(const SituationScene *scene);
 
     /*!
      * \brief SimulationStopRequest emitted when "Stop simulation" button clicked
@@ -43,7 +43,7 @@ signals:
     void SimulationStopRequest();
 
 private slots:
-    void clicked();
+    void updateSimulationState();
 
 private:
     void refreshSimulationControlButton();

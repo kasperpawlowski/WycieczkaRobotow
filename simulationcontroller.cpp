@@ -1,46 +1,39 @@
-#include <QDebug>
-#include <QProcess>
+#include <QTimer>
 #include "simulationcontroller.h"
-#include "simulationinterface.h"
 
 SimulationController::SimulationController(QObject *parent) :
-    QThread(parent) {}
-
-void SimulationController::startSimulation(const SituationScene *const situation)
+    QObject(parent)
 {
-    if(!situation)
+
+}
+
+void SimulationController::startSimulation(const SituationScene *situation)
+{
+    // create interface object and host it to the other process
+    interface_     = new SimulationInterface(situation);
+    interfaceNode_ = new QRemoteObjectHost(interfaceUrl_);
+    interfaceNode_->enableRemoting(interface_);
+
+    // run simulation
+    QStringList arguments;
+    simulation_ = new QProcess;
+
+    arguments << interfaceUrl_;
+    simulation_->start(simulationFilePath_, arguments);
+
+    if(!simulation_->waitForStarted())
     {
-        qCritical() << "Simulation Controller: situation scene cannot be nullptr";
+        qCritical() << "Simulation Controller: unable to start the simulation";
+        QTimer::singleShot(0, situation, SLOT(simulationFinished()));
         return;
     }
-
-    situation_ = situation;
-    start();
 }
 
 void SimulationController::stopSimulation()
 {
-    situation_ = nullptr;
-    quit();
-    wait();
-}
-
-void SimulationController::run()
-{
-    // create interface object and host it to the other processes
-    SimulationInterface interface(situation_);
-    const QString       url = "local:simulationInterfaceNode";
-
-    QRemoteObjectHost interfaceNode(url);
-    interfaceNode.enableRemoting(&interface);
-
-    // run simulation
-    QString             simulation_path = ".\\simulation\\SimulationEngine.exe";
-    QStringList         arguments;
-    QProcess            simulation;
-
-    arguments << url;
-    simulation.start(simulation_path, arguments);
-
-    exec();
+    simulation_->kill();
+    simulation_->waitForFinished();
+    delete simulation_;
+    delete interfaceNode_;
+    delete interface_;
 }

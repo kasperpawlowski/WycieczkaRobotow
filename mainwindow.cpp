@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout_->addWidget(simulationControlButton_, 0, 1);
     ui_->centralWidget->setLayout(mainLayout_);
 
-    connect(simulationControlButton_, SIGNAL(clicked()), this, SLOT(clicked()));
+    connect(simulationControlButton_, SIGNAL(clicked()), this, SLOT(updateSimulationState()));
+    connect(situation_, SIGNAL(simulationFinishAnnouncement()), this, SLOT(updateSimulationState()));
     refreshSimulationControlButton();
 }
 
@@ -35,7 +36,7 @@ MainWindow::~MainWindow()
     delete ui_;
 }
 
-void MainWindow::clicked()
+void MainWindow::updateSimulationState()
 {
     if(simulationStarted_)
     {

@@ -11,6 +11,7 @@ class BaseSimulationInterface
     SIGNAL(cannotAddObjectFwd(const int))
     SIGNAL(cannotDeleteObjectFwd(const int))
     SIGNAL(cannotUpdateObjectPositionFwd(const int))
+    SIGNAL(simulationFinishedFwd())
 
     SLOT(clearReqReemit())
     SLOT(addObjectReqReemit(const int, const DisplayableObjectType))
@@ -21,4 +22,5 @@ class BaseSimulationInterface
     SLOT(cannotAddObjectReemit(const int))
     SLOT(cannotDeleteObjectReemit(const int))
     SLOT(cannotUpdateObjectPositionReemit(const int))
+    SLOT(simulationFinishedReemit())
 }
