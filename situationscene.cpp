@@ -21,7 +21,7 @@ SituationScene::SituationScene(QGraphicsView *const view, QObject *parent) :
 
 void SituationScene::clear()
 {
-    for(SOContainer::iterator it = objects_.begin(); it != objects_.end(); ++it)
+    for(auto it = objects_.begin(); it != objects_.end(); ++it)
     {
         removeItem(it->second);
     }
@@ -72,9 +72,9 @@ void SituationScene::updateObjectPosition(const int id, const PositionType pos)
 void SituationScene::situationRectDimensions()
 {
     // first, set the scene rectangle based on view widget
-    setSceneRect(view_->rect());
+    setSceneRect(view_->rect().x(), view_->rect().y(), 0.95*view_->rect().width(), 0.95*view_->rect().height());
 
-    RectDimentionsType dim;
+    RectDimensionsType dim;
     dim.height = view_->rect().height();
     dim.width  = view_->rect().width();
     emit situationRectDimensionsInfo(dim);

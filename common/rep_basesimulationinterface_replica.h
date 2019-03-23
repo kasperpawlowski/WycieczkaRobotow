@@ -33,8 +33,8 @@ public:
         qRegisterMetaTypeStreamOperators<DisplayableObjectType>();
         qRegisterMetaType<PositionType>();
         qRegisterMetaTypeStreamOperators<PositionType>();
-        qRegisterMetaType<RectDimentionsType>();
-        qRegisterMetaTypeStreamOperators<RectDimentionsType>();
+        qRegisterMetaType<RectDimensionsType>();
+        qRegisterMetaTypeStreamOperators<RectDimensionsType>();
 
     }
 
@@ -63,7 +63,7 @@ Q_SIGNALS:
     void deleteObjectReqFwd(const int __repc_variable_1);
     void updateObjectPositionReqFwd(const int __repc_variable_1, const PositionType __repc_variable_2);
     void situationRectDimensionsReqFwd();
-    void situationRectDimensionsInfoFwd(const RectDimentionsType __repc_variable_1);
+    void situationRectDimensionsInfoFwd(const RectDimensionsType __repc_variable_1);
     void cannotAddObjectFwd(const int __repc_variable_1);
     void cannotDeleteObjectFwd(const int __repc_variable_1);
     void cannotUpdateObjectPositionFwd(const int __repc_variable_1);
@@ -111,9 +111,9 @@ public Q_SLOTS:
         QVariantList __repc_args;
         send(QMetaObject::InvokeMetaMethod, __repc_index, __repc_args);
     }
-    void situationRectDimensionsInfoReemit(const RectDimentionsType __repc_variable_1)
+    void situationRectDimensionsInfoReemit(const RectDimensionsType __repc_variable_1)
     {
-        static int __repc_index = BaseSimulationInterfaceReplica::staticMetaObject.indexOfSlot("situationRectDimensionsInfoReemit(RectDimentionsType)");
+        static int __repc_index = BaseSimulationInterfaceReplica::staticMetaObject.indexOfSlot("situationRectDimensionsInfoReemit(RectDimensionsType)");
         QVariantList __repc_args;
         __repc_args
             << QVariant::fromValue(__repc_variable_1)

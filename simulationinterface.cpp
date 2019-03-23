@@ -18,8 +18,8 @@ SimulationInterface::SimulationInterface(const SituationScene *const situation, 
     connect(this, SIGNAL(situationRectDimensionsReqFwd()),
             situation, SLOT(situationRectDimensions()));
 
-    connect(situation, SIGNAL(situationRectDimensionsInfo(const RectDimentionsType)),
-            this, SLOT(situationRectDimensionsInfoReemit(const RectDimentionsType)));
+    connect(situation, SIGNAL(situationRectDimensionsInfo(const RectDimensionsType)),
+            this, SLOT(situationRectDimensionsInfoReemit(const RectDimensionsType)));
 
     connect(situation, SIGNAL(cannotAddObject(const int)),
             this, SLOT(cannotAddObjectReemit(const int)));
@@ -59,7 +59,7 @@ void SimulationInterface::situationRectDimensionsReqReemit()
     emit situationRectDimensionsReqFwd();
 }
 
-void SimulationInterface::situationRectDimensionsInfoReemit(const RectDimentionsType rect)
+void SimulationInterface::situationRectDimensionsInfoReemit(const RectDimensionsType rect)
 {
     emit situationRectDimensionsInfoFwd(rect);
 }

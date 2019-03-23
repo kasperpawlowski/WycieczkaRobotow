@@ -14,16 +14,17 @@ RobotsManager::~RobotsManager()
 
 bool RobotsManager::addRobot(const BaseRobot* robot)
 {
-    const int id         = robot->getID();
-    BaseRobot *robotCopy = robot->clone();
+    const int id = robot->getID();
 
     // overwrite protection
-    if(objects.find(id) != objects.end())
+    if(robotExists(id))
     {
         return false;
     }
 
-    // assign a new thread to the robot, assign proper connections and start the thread
+    BaseRobot *robotCopy = robot->clone();
+
+    // assign a new thread to the robot and make proper connections
     objects.insert(RTPair(id, {robotCopy, new QThread}));
 
     QObject::connect(objects.at(id).thread, SIGNAL(started()),
@@ -33,7 +34,6 @@ bool RobotsManager::addRobot(const BaseRobot* robot)
                      objects.at(id).thread, SLOT(quit()));
 
     objects.at(id).robot->moveToThread(objects.at(id).thread);
-    objects.at(id).thread->start();
 
     nothingRunYet = false;
     return true;
@@ -51,6 +51,15 @@ BaseRobot* RobotsManager::getRobot(const int id) const
         qCritical() << "Robots Manager: ID = " << id << " invalid, no such a robot";
     }
     return objects.at(id).robot;
+}
+
+void RobotsManager::startRobots()
+{
+    // start all the threads
+    for(RTContainter::iterator it = objects.begin(); it != objects.end(); ++it)
+    {
+        it->second.thread->start();
+    }
 }
 
 void RobotsManager::killRobots()
@@ -74,7 +83,7 @@ bool RobotsManager::allJobsFinished()
         return false;
     }
 
-    // if all the threads finished, then simulation finished
+    // if all the threads finished then simulation finished
     bool finished = true;
     for(RTContainter::iterator it = objects.begin(); it != objects.end(); ++it)
     {

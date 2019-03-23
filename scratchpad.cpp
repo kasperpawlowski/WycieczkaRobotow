@@ -1,6 +1,7 @@
 #include <QPainter>
 #include <QDebug>
 #include "scratchpad.h"
+#include "filesgenerator.h"
 
 Scratchpad::Scratchpad(QWidget *parent) :
     QWidget(parent), color_(Qt::blue), thickness_(3), alreadyDrawn_(false)
@@ -34,9 +35,9 @@ void Scratchpad::clearScratchpad()
     update();
 }
 
-bool Scratchpad::generatePathData() const
+bool Scratchpad::generatePathData(const QString filePath) const
 {
-    return true;
+    return FilesGenerator<std::list>::generateFile(filePath, pathData_);
 }
 
 void Scratchpad::paintEvent(QPaintEvent * /*event*/)

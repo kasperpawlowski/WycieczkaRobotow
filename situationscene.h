@@ -60,7 +60,7 @@ signals:
      *        the visualization area
      * \param[in] dim dimensions of the visualization area
      */
-    void situationRectDimensionsInfo(const RectDimentionsType dim);
+    void situationRectDimensionsInfo(const RectDimensionsType dim);
 
     /*!
      * \brief simulationFinishAnnouncement emitted when simulation is finished

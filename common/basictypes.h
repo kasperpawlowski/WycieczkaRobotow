@@ -3,22 +3,24 @@
 
 #include <QMetaType>
 #include <QDataStream>
+#include <cmath>
+#include "position.h"
 
 /*!
- * \brief Describes dimensions of a rectangle
+ * \brief The RectDimensionsType struct describes dimensions of a rectangle
  */
-struct RectDimentionsType
+struct RectDimensionsType
 {
     int width;
     int height;
 };
 
 /*!
- * \brief Describes position of an object in a plane
+ * \brief The PositionType struct describes position of an object in a screen plane
  *
  * \param x holds distance to the y axis
  * \param y holds distance to the x axis
- * \param a holds orientation angle
+ * \param a holds orientation angle (heading), measured from the x axis
  */
 struct PositionType
 {
@@ -28,8 +30,8 @@ struct PositionType
 };
 
 /*!
- * \brief Groups all the parameters needed for a pixmap object to be correctly
- *        displayed
+ * \brief The DisplayableObjectType struct groups all the parameters needed
+ *        for a pixmap object to be correctly displayed
  *
  * \param pixmapPosition holds position of an object
  * \param pixmapFilename holds path to the file representing a pixmap
@@ -39,41 +41,59 @@ struct DisplayableObjectType
 {
     PositionType       pixmapPosition;
     QString            pixmapFilename;
-    RectDimentionsType pixmapDimensions;
+    RectDimensionsType pixmapDimensions;
 };
+
+/*!
+ * \brief operator * scales the coordinates of Position object by provided scale factor.
+ *        Translates the Position object to screen position.
+ * \param[in] pos Position object
+ * \param[in] sf scale factor
+ * \return scaled PositionType object
+ */
+PositionType operator*(const Position& pos, const double sf);
+
+/*!
+ * \brief operator * scales the coordinates of Position object by provided scale factor.
+ *        Translates the Position object to screen position.
+ * \param[in] sf scale factor
+ * \param[in] pos Position object
+ * \return scaled PositionType object
+ */
+PositionType operator*(const double sf, const Position& pos);
 
 /*!
  * \brief operator needed for Qt Remote Object concept to work properly
  */
-QDataStream& operator<<(QDataStream& out, const RectDimentionsType& rect);
+QDataStream& operator<<(QDataStream& out, const RectDimensionsType& rect);
 
 /*!
- * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ * \brief \copydoc operator<<(QDataStream&, const RectDimensionsType&)
  */
-QDataStream& operator>>(QDataStream& stream, RectDimentionsType& rect);
+QDataStream& operator>>(QDataStream& stream, RectDimensionsType& rect);
 
 /*!
- * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ * \brief \copydoc operator<<(QDataStream&, const RectDimensionsType&)
  */
 QDataStream& operator<<(QDataStream& out, const PositionType& pos);
 
 /*!
- * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ * \brief \copydoc operator<<(QDataStream&, const RectDimensionsType&)
  */
 QDataStream& operator>>(QDataStream& stream, PositionType& pos);
 
 /*!
- * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ * \brief \copydoc operator<<(QDataStream&, const RectDimensionsType&)
  */
 QDataStream& operator<<(QDataStream& out, const DisplayableObjectType& obj);
 
 /*!
- * \brief \copydoc operator<<(QDataStream&, const RectDimentionsType&)
+ * \brief \copydoc operator<<(QDataStream&, const RectDimensionsType&)
  */
 QDataStream& operator>>(QDataStream& stream, DisplayableObjectType& obj);
 
 // Declare new types for management in meta-object system
-Q_DECLARE_METATYPE(RectDimentionsType);
+Q_DECLARE_METATYPE(RectDimensionsType);
 Q_DECLARE_METATYPE(PositionType);
 Q_DECLARE_METATYPE(DisplayableObjectType);
 

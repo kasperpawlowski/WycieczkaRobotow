@@ -1,12 +1,22 @@
 #include "basictypes.h"
 
-QDataStream& operator<<(QDataStream& out, const RectDimentionsType& rect)
+PositionType operator*(const Position& pos, const double sf)
+{
+    return PositionType({int(round(pos.getX() * sf)), int(round(pos.getY() * sf)), pos.getA()});
+}
+
+PositionType operator*(const double sf, const Position& pos)
+{
+    return pos * sf;
+}
+
+QDataStream& operator<<(QDataStream& out, const RectDimensionsType& rect)
 {
     out << rect.width << rect.height;
     return out;
 }
 
-QDataStream& operator>>(QDataStream& in, RectDimentionsType& rect)
+QDataStream& operator>>(QDataStream& in, RectDimensionsType& rect)
 {
     in >> rect.width >> rect.height;
     return in;

@@ -16,22 +16,14 @@ class BaseRobot : public CommonInterfaceUser
 {
     Q_OBJECT
 public:
-    /*!
-     * \brief BaseRobot creates a new BaseRobot described by the provided identifier
-     * \param[in] id an identifier that will describe the robot
-     */
-    BaseRobot(const int id);
+    enum SIMULATION_SPEED {FAST = 2, MEDIUM = 10, SLOW = 50};
 
     /*!
      * \brief BaseRobot creates a new BaseRobot described by the provided identifier
      * \param[in] id an identifier that will describe the robot
-     * \param[in] pos initial position of the robot on the screen
-     * \param[in] pixmap a file path to the pixmap that will be displayed
-     * \param[in] dim dimensions of the pixmap that will be displayed
-     * \param[in] rep a pointer to the Qt Remote Object simulation inteface replica
+     * \param[in] rep a pointer to the Qt Remote Object inteface replica
      */
-    BaseRobot(const int id, const PositionType pos, const QString pixmap,
-              const RectDimentionsType dim, const BSIReplicaSP rep);
+    BaseRobot(const int id, const BSIReplicaSP rep);
 
     /*!
      * \brief BaseRobot a copy constructor
@@ -46,50 +38,30 @@ public:
     /*!
      * \brief clone polymorphic copy constructor, must be defined in every
      *        class that derives from BaseRobot
-     * \return pointer to a newly created copy of the object
+     * \return pointer to the newly created copy of the object
      */
     virtual BaseRobot* clone() const = 0;
 
     /*!
-     * \brief setInitialPixmapPosition sets initial pixmap position on SituationScene
-     * \param[in] pos initial position
-     * \return true on success, false otherwise
+     * \brief setRobotSimulationSpeed sets speed of the robot simulation
+     *        (for the most realistic results, all the robots should have
+     *         the same simulation speed)
+     * \param[in] speed requested simulation speed
      */
-    bool setInitialPixmapPosition(const PositionType pos);
+    void setRobotSimulationSpeed(SIMULATION_SPEED speed) {simSpeed_ = speed;}
 
     /*!
-     * \brief setPixmapFile sets a path to the displayed pixmap file
-     * \param[in] pixmap a path to the pixmap file
+     * \brief getRobotSimulationSpeed returns particular robot's simulation speed
+     * \return simulation speed
      */
-    void setPixmapFile(const QString pixmap);
+    SIMULATION_SPEED getRobotSimulationSpeed() const {return simSpeed_;}
 
     /*!
-     * \brief setPixmapSize sets size of the displayed pixmap
-     * \param[in] dim size of the pixmap
+     * \brief getLoopCount returns number of repetitions of the robot's loop
+     *        (in fact, it is number of simulationPeriodicControl() calls)
+     * \return number of repetitions
      */
-    void setPixmapSize(const RectDimentionsType dim);
-
-    /*!
-     * \brief getID returns the identifier of the robot
-     */
-    int getID() const {return id_;}
-
-    /*!
-     * \brief getPixmapPosition returns current position of the displayed pixmap
-     */
-    PositionType getPixmapPosition() const {return dispObj_.pixmapPosition;}
-
-    /*!
-     * \brief getPixmapFile returns a path to the file of the displayed pixmap
-     */
-    QString getPixmapFile() const {return  dispObj_.pixmapFilename;}
-
-    /*!
-     * \brief getPixmapSize returns current size of the displayed pixmap
-     * \return
-     */
-    RectDimentionsType getPixmapSize() const {return  dispObj_.pixmapDimensions;}
-
+    unsigned int getLoopCount() const {return loopCounter_;}
 signals:
     /*!
      * \brief jobFinished emitted when the robot finishes its role
@@ -100,44 +72,34 @@ public slots:
     /*!
      * \brief run callable entry point of the robot simulation
      */
-    void run();
+    virtual void run();
 
 protected:
     /*!
-     * \brief addPixmap adds the pixmap to the SituationScene
-     * \return true on success, false otherwise
+     * \brief simulationPeriodicControl processes events, waits for the time corresponding
+     *        to the simulation speed, increments the loop counter
+     *
+     * This method should be called in runRobot in every repetition of its inner loop.
+     * May be overloaded but the overloading method should call the original method
      */
-    bool addPixmap();
-
-    /*!
-     * \brief deletePixmap deletes the pixmap from the SituationScene
-     * \return true on success, false otherwise
-     */
-    bool deletePixmap();
-
-    /*!
-     * \brief updatePixmapPosition updates the position of the pixmap on the SituationScene
-     * \param[in] pos new position
-     */
-    void updatePixmapPosition(const PositionType pos);
+    virtual void simulationPeriodicControl();
 
 private:
     BaseRobot() = delete;
-    bool isPixmapFileValid(const QString file) const;
 
     /*!
      * \brief runRobot shall be defined by classes that derive from BaseRobot
      *
      * This is the real entry point of the simulation for each robot. The robot
-     * simulation logic shall be defined in this method. QCoreApplication::processEvents()
-     * should be called periodically in a loop so the robot keeps being responsive. It is assumed
-     * than when the robot returns from this method its job is finished.
+     * simulation logic shall be defined in this method. simulationPeriodicControl()
+     * method shall be called periodically in a loop so the robot keeps being responsive
+     * and the simulation runs at desired pace. It is assumed than when the robot returns
+     * from this method its job is finished.
      */
     virtual void runRobot() = 0;
 
-    const int             id_;
-    DisplayableObjectType dispObj_;
-    bool                  sentToGUI_;
+    SIMULATION_SPEED simSpeed_;
+    unsigned int     loopCounter_;
 };
 
 #endif // BASEROBOT_H

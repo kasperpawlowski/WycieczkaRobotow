@@ -3,19 +3,19 @@
 #include "mainwindow.h"
 #include "simulationcontroller.h"
 
+const QString simulationPath = ".\\simulation\\SimulationEngine.exe";
+const QString interfaceUrl   = "local:simulationInterfaceNode";
+
 int main(int argc, char *argv[])
 {
     QApplication         app(argc, argv);
     MainWindow           window;
     SimulationController simulation;
     QThread              thread;
-    //const QString path = ".\\simulation\\SimulationEngine.exe";
-    const QString        path = "C:\\Users\\Kasper\\Desktop\\OKNO\\ZCpp\\build-SimulationEngine-Desktop_Qt_5_12_1_MinGW_64_bit-Release\\release\\SimulationEngine.exe";
-    const QString        url  = "local:simulationInterfaceNode";
 
     // set desired URL of Qt Remote Object interface and a custom simulation path
-    simulation.setInterfaceURL(url);
-    simulation.setSimulationFilePath(path);
+    simulation.setInterfaceURL(interfaceUrl);
+    simulation.setSimulationFilePath(simulationPath);
 
     // connect signals and slots between the main window and the simulation controller
     QObject::connect(&window, SIGNAL(SimulationStartRequest(const SituationScene*)),

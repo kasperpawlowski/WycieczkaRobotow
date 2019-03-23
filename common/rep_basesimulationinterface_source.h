@@ -18,17 +18,17 @@ class BaseSimulationInterfaceSource : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_TYPE, "BaseSimulationInterface")
-    Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_SIGNATURE, "ac8eb22012f29d013df92e6baaae5cd8676835b0")
+    Q_CLASSINFO(QCLASSINFO_REMOTEOBJECT_SIGNATURE, "bf23fd386662b4561725f7ad186abbcb20209c3d")
 
 public:
     explicit BaseSimulationInterfaceSource(QObject *parent = nullptr) : QObject(parent)
     {
-        qRegisterMetaType<DisplayableObjectType>();
-        qRegisterMetaTypeStreamOperators<DisplayableObjectType>();
+        qRegisterMetaType<RectDimensionsType>();
+        qRegisterMetaTypeStreamOperators<RectDimensionsType>();
         qRegisterMetaType<PositionType>();
         qRegisterMetaTypeStreamOperators<PositionType>();
-        qRegisterMetaType<RectDimentionsType>();
-        qRegisterMetaTypeStreamOperators<RectDimentionsType>();
+        qRegisterMetaType<DisplayableObjectType>();
+        qRegisterMetaTypeStreamOperators<DisplayableObjectType>();
 
     }
 
@@ -42,7 +42,7 @@ Q_SIGNALS:
     void deleteObjectReqFwd(const int __repc_variable_1);
     void updateObjectPositionReqFwd(const int __repc_variable_1, const PositionType __repc_variable_2);
     void situationRectDimensionsReqFwd();
-    void situationRectDimensionsInfoFwd(const RectDimentionsType __repc_variable_1);
+    void situationRectDimensionsInfoFwd(const RectDimensionsType __repc_variable_1);
     void cannotAddObjectFwd(const int __repc_variable_1);
     void cannotDeleteObjectFwd(const int __repc_variable_1);
     void cannotUpdateObjectPositionFwd(const int __repc_variable_1);
@@ -54,7 +54,7 @@ public Q_SLOTS:
     virtual void deleteObjectReqReemit(const int __repc_variable_1) = 0;
     virtual void updateObjectPositionReqReemit(const int __repc_variable_1, const PositionType __repc_variable_2) = 0;
     virtual void situationRectDimensionsReqReemit() = 0;
-    virtual void situationRectDimensionsInfoReemit(const RectDimentionsType __repc_variable_1) = 0;
+    virtual void situationRectDimensionsInfoReemit(const RectDimensionsType __repc_variable_1) = 0;
     virtual void cannotAddObjectReemit(const int __repc_variable_1) = 0;
     virtual void cannotDeleteObjectReemit(const int __repc_variable_1) = 0;
     virtual void cannotUpdateObjectPositionReemit(const int __repc_variable_1) = 0;
@@ -100,7 +100,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         m_signals[3] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::deleteObjectReqFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+2,&m_signalArgTypes[2]);
         m_signals[4] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::updateObjectPositionReqFwd, static_cast<void (QObject::*)(int,PositionType)>(0),m_signalArgCount+3,&m_signalArgTypes[3]);
         m_signals[5] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::situationRectDimensionsReqFwd, static_cast<void (QObject::*)()>(0),m_signalArgCount+4,&m_signalArgTypes[4]);
-        m_signals[6] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::situationRectDimensionsInfoFwd, static_cast<void (QObject::*)(RectDimentionsType)>(0),m_signalArgCount+5,&m_signalArgTypes[5]);
+        m_signals[6] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::situationRectDimensionsInfoFwd, static_cast<void (QObject::*)(RectDimensionsType)>(0),m_signalArgCount+5,&m_signalArgTypes[5]);
         m_signals[7] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotAddObjectFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+6,&m_signalArgTypes[6]);
         m_signals[8] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotDeleteObjectFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+7,&m_signalArgTypes[7]);
         m_signals[9] = QtPrivate::qtro_signal_index<ObjectType>(&ObjectType::cannotUpdateObjectPositionFwd, static_cast<void (QObject::*)(int)>(0),m_signalArgCount+8,&m_signalArgTypes[8]);
@@ -111,7 +111,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         m_methods[3] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::deleteObjectReqReemit, static_cast<void (QObject::*)(int)>(0),"deleteObjectReqReemit(int)",m_methodArgCount+2,&m_methodArgTypes[2]);
         m_methods[4] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::updateObjectPositionReqReemit, static_cast<void (QObject::*)(int,PositionType)>(0),"updateObjectPositionReqReemit(int,PositionType)",m_methodArgCount+3,&m_methodArgTypes[3]);
         m_methods[5] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::situationRectDimensionsReqReemit, static_cast<void (QObject::*)()>(0),"situationRectDimensionsReqReemit()",m_methodArgCount+4,&m_methodArgTypes[4]);
-        m_methods[6] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::situationRectDimensionsInfoReemit, static_cast<void (QObject::*)(RectDimentionsType)>(0),"situationRectDimensionsInfoReemit(RectDimentionsType)",m_methodArgCount+5,&m_methodArgTypes[5]);
+        m_methods[6] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::situationRectDimensionsInfoReemit, static_cast<void (QObject::*)(RectDimensionsType)>(0),"situationRectDimensionsInfoReemit(RectDimensionsType)",m_methodArgCount+5,&m_methodArgTypes[5]);
         m_methods[7] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotAddObjectReemit, static_cast<void (QObject::*)(int)>(0),"cannotAddObjectReemit(int)",m_methodArgCount+6,&m_methodArgTypes[6]);
         m_methods[8] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotDeleteObjectReemit, static_cast<void (QObject::*)(int)>(0),"cannotDeleteObjectReemit(int)",m_methodArgCount+7,&m_methodArgTypes[7]);
         m_methods[9] = QtPrivate::qtro_method_index<ObjectType>(&ObjectType::cannotUpdateObjectPositionReemit, static_cast<void (QObject::*)(int)>(0),"cannotUpdateObjectPositionReemit(int)",m_methodArgCount+8,&m_methodArgTypes[8]);
@@ -190,7 +190,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         case 2: return QByteArrayLiteral("deleteObjectReqFwd(int)");
         case 3: return QByteArrayLiteral("updateObjectPositionReqFwd(int,PositionType)");
         case 4: return QByteArrayLiteral("situationRectDimensionsReqFwd()");
-        case 5: return QByteArrayLiteral("situationRectDimensionsInfoFwd(RectDimentionsType)");
+        case 5: return QByteArrayLiteral("situationRectDimensionsInfoFwd(RectDimensionsType)");
         case 6: return QByteArrayLiteral("cannotAddObjectFwd(int)");
         case 7: return QByteArrayLiteral("cannotDeleteObjectFwd(int)");
         case 8: return QByteArrayLiteral("cannotUpdateObjectPositionFwd(int)");
@@ -212,7 +212,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         case 2: return QByteArrayLiteral("deleteObjectReqReemit(int)");
         case 3: return QByteArrayLiteral("updateObjectPositionReqReemit(int,PositionType)");
         case 4: return QByteArrayLiteral("situationRectDimensionsReqReemit()");
-        case 5: return QByteArrayLiteral("situationRectDimensionsInfoReemit(RectDimentionsType)");
+        case 5: return QByteArrayLiteral("situationRectDimensionsInfoReemit(RectDimensionsType)");
         case 6: return QByteArrayLiteral("cannotAddObjectReemit(int)");
         case 7: return QByteArrayLiteral("cannotDeleteObjectReemit(int)");
         case 8: return QByteArrayLiteral("cannotUpdateObjectPositionReemit(int)");
@@ -246,7 +246,7 @@ struct BaseSimulationInterfaceSourceAPI : public SourceApiMap
         }
         return QByteArrayLiteral("");
     }
-    QByteArray objectSignature() const override { return QByteArray{"ac8eb22012f29d013df92e6baaae5cd8676835b0"}; }
+    QByteArray objectSignature() const override { return QByteArray{"bf23fd386662b4561725f7ad186abbcb20209c3d"}; }
 
     int m_enums[1];
     int m_properties[1];

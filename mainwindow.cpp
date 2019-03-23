@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // create a layout for all the widgets
     mainLayout_ = new QGridLayout();
     mainLayout_->addWidget(view_, 0, 0, 3, 1);
-    mainLayout_->addWidget(formation_, 2, 1);
-    mainLayout_->addWidget(path_, 1, 1);
-    mainLayout_->addWidget(simulationControlButton_, 0, 1);
+    mainLayout_->addWidget(formation_, 1, 1);
+    mainLayout_->addWidget(path_, 0, 1);
+    mainLayout_->addWidget(simulationControlButton_, 2, 1);
     ui_->centralWidget->setLayout(mainLayout_);
 
     connect(simulationControlButton_, SIGNAL(clicked()), this, SLOT(updateSimulationState()));

@@ -13,11 +13,8 @@ template<typename DerivedRobot>
 class BaseRobotCRTP : public BaseRobot
 {
 public:
-    BaseRobotCRTP(const int id) : BaseRobot(id) {}
-
-    BaseRobotCRTP(const int id, const PositionType pos, const QString pixmap,
-                  const RectDimentionsType dim, const BSIReplicaSP rep) :
-        BaseRobot(id, pos, pixmap, dim, rep) {}
+    BaseRobotCRTP(const int id, const BSIReplicaSP rep) :
+        BaseRobot(id, rep) {}
 
     BaseRobotCRTP(const BaseRobotCRTP& robot) : BaseRobot(robot) {}
 

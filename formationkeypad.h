@@ -11,7 +11,7 @@
  * A square keypad is formed in a grid. Contains (rows_ x cols_) of bi-state push
  * buttons (KeypadPushButton) that let the user to define a desired formation pattern.
  *
- * "Clear" button serves for instant clearing of the pattern that have been pushed.
+ * "Clear" button serves for instant clearing of the pattern that has been pushed.
  *
  * "Accept" button serves for generation of a file that contains information about
  * a position of the pushed buttons.
@@ -44,9 +44,10 @@ public:
      * \brief generateFormationData generates the file that contains information
      *        about a position of the pushed buttons. Assumes that validity of the
      *        formation has been checked
+     * \param[in] filePath a path to the to be generated file
      * \return true on success, false otherwise
      */
-    virtual bool generateFormationData() const;
+    virtual bool generateFormationData(const QString filePath) const;
 
 private slots:
     void buttonClicked(const unsigned int row, const unsigned int col);

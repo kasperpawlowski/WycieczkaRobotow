@@ -35,7 +35,8 @@ SOURCES += \
     scratchpad.cpp \
     scratchpadcontroller.cpp \
     simulationinterface.cpp \
-    simulationcontroller.cpp
+    simulationcontroller.cpp \
+    common/point.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +49,9 @@ HEADERS += \
     simulationinterface.h \
     common/rep_basesimulationinterface_source.h \
     simulationcontroller.h \
-    common/baserobotcrtp.h
+    common/filesgenerator.h \
+    common/point.h \
+    common/simulationstarter.h
 
 FORMS += \
         mainwindow.ui

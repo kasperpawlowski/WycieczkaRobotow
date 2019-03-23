@@ -1,5 +1,6 @@
 #include <QDesktopWidget>
 #include <QVBoxLayout>
+#include <QDebug>
 #include "scratchpadcontroller.h"
 
 ScratchpadController::ScratchpadController(QWidget *parent) :
@@ -26,10 +27,23 @@ ScratchpadController::ScratchpadController(QWidget *parent) :
 
 void ScratchpadController::acceptButtonClicked()
 {
+    const QString filePath = ".\\simulation\\PathData.txt";
+    QFile file(filePath);
+
+    if(file.exists())
+    {
+        file.remove();
+    }
+
     if(scratchpad_->isDrawingValid())
     {
         generationState_ = GENERATED;
-        scratchpad_->generatePathData();
+
+        if(!scratchpad_->generatePathData(filePath))
+        {
+            qCritical() << "Scratchpad Controller: unable to generate the path file";
+            generationState_ = NOT_GENERATED_INVALID;
+        }
     }
     else
     {

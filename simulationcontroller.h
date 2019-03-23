@@ -2,7 +2,6 @@
 #define SIMULATIONCONTROLLER_H
 
 #include <QProcess>
-#include "situationscene.h"
 #include "simulationinterface.h"
 
 /*!
@@ -26,7 +25,7 @@ public:
     /*!
      * \brief ~SimulationController destructs the SimulationController
      */
-    ~SimulationController() {}
+    ~SimulationController();
 
     /*!
      * \brief setInterfaceURL sets the URL of the Qt Remote Object simulation interface

@@ -1,7 +1,9 @@
 #include <QGridLayout>
 #include <QDesktopWidget>
+#include <QFile>
 #include <QDebug>
 #include "formationkeypad.h"
+#include "filesgenerator.h"
 
 FormationKeypad::FormationKeypad(const unsigned int rows, const unsigned int cols,
                                  QWidget *parent) :
@@ -62,9 +64,57 @@ bool FormationKeypad::isFormationValid() const
     return any_object_in_formation;
 }
 
-bool FormationKeypad::generateFormationData() const
+bool FormationKeypad::generateFormationData(const QString filePath) const
 {
-    return true;
+    std::pair<unsigned int, unsigned int> min_max_row = {rows_, 0};
+    std::pair<unsigned int, unsigned int> min_max_col = {cols_, 0};
+
+    // find the smallest rectange that contains all the checked buttons
+    for(unsigned int i = 0; i < rows_; ++i)
+    {
+        for(unsigned int j = 0; j < cols_; ++j)
+        {
+            if(formationButtons_[i][j]->isChecked())
+            {
+                if(i < min_max_row.first)
+                {
+                    min_max_row.first = i;
+                }
+
+                if(i > min_max_row.second)
+                {
+                    min_max_row.second = i;
+                }
+
+                if(j < min_max_col.first)
+                {
+                    min_max_col.first = j;
+                }
+
+                if(j > min_max_col.second)
+                {
+                    min_max_col.second = j;
+                }
+            }
+        }
+    }
+
+    // transform the coordinates in a way the coordinate system begins
+    // in the left bottom corner of the rectange that contains all the
+    // checked buttons
+    std::vector<QPoint> formation;
+    for(unsigned int i = min_max_row.first; i <= min_max_row.second; ++i)
+    {
+        for(unsigned int j = min_max_col.first; j <= min_max_col.second; ++j)
+        {
+            if(formationButtons_[i][j]->isChecked())
+            {
+                formation.push_back(QPoint(int(j - min_max_col.first), int(min_max_row.second - i)));
+            }
+        }
+    }
+
+    return FilesGenerator<std::vector>::generateFile(filePath, formation);
 }
 
 void FormationKeypad::buttonClicked(const unsigned int /*row*/, const unsigned int /*col*/)
@@ -76,10 +126,23 @@ void FormationKeypad::buttonClicked(const unsigned int /*row*/, const unsigned i
 
 void FormationKeypad::acceptButtonClicked()
 {
+    const QString filePath = ".\\simulation\\FormationData.txt";
+    QFile file(filePath);
+
+    if(file.exists())
+    {
+        file.remove();
+    }
+
     if(isFormationValid())
     {
-        generateFormationData();
         generationState_ = GENERATED;
+
+        if(!generateFormationData(filePath))
+        {
+            qCritical() << "Formation Keypad: unable to generate the formation file";
+            generationState_ = NOT_GENERATED_INVALID;
+        }
     }
     else
     {

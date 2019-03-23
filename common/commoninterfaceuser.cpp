@@ -1,23 +1,28 @@
+#include <QFileInfo>
 #include "commoninterfaceuser.h"
 
-CommonInterfaceUser::CommonInterfaceUser() :
-    QObject(nullptr), connected_(false)
+CommonInterfaceUser::CommonInterfaceUser(const int id, const BSIReplicaSP rep) :
+    QObject(nullptr), id_(id)
 {
-
-}
-
-
-CommonInterfaceUser::CommonInterfaceUser(const BSIReplicaSP rep) :
-    QObject(nullptr), connected_(false)
-{
+    connected_   = false;
+    sentToGUI_   = false;
+    scaleFactor_ = 1.0;
+    dispObj_.pixmapPosition   = {0, 0, 0.0};
+    dispObj_.pixmapFilename   = "";
+    dispObj_.pixmapDimensions = {32, 32};
     connectToTheInterface(rep);
 }
 
 CommonInterfaceUser::CommonInterfaceUser(const CommonInterfaceUser& user) :
-    QObject(nullptr), connected_(false)
+    QObject(nullptr), id_(user.id_)
 {
-    // as QObject does not have copy constructor, new object has to be
+    sentToGUI_   = user.sentToGUI_;
+    scaleFactor_ = user.scaleFactor_;
+    dispObj_     = user.dispObj_;
+
+    // as QObject does not have a copy constructor, new object has to be
     // created, therefore all the connections have to be made again
+    connected_ = false;
     connectToTheInterface(user.replicaInterface_);
 }
 
@@ -49,7 +54,80 @@ bool CommonInterfaceUser::connectToTheInterface(BSIReplicaSP rep)
     return true;
 }
 
+void CommonInterfaceUser::setPixmapFile(const QString pixmap)
+{
+    dispObj_.pixmapFilename = pixmap;
+
+    // if robot has been sent to GUI, update the pixmap
+    if(isSentToGUI()               &&
+       isConnectedToTheInterface() &&
+       isPixmapFileValid(pixmap))
+    {
+        deletePixmap();
+        addPixmap();
+    }
+}
+
+void CommonInterfaceUser::setPixmapSize(const RectDimensionsType dim)
+{
+    dispObj_.pixmapDimensions = dim;
+
+    // if robot has been sent to GUI, update its size
+    if(isSentToGUI() && isConnectedToTheInterface())
+    {
+        deletePixmap();
+        addPixmap();
+    }
+}
+
 bool CommonInterfaceUser::isConnectedToTheInterface() const
 {
-    return (connected_ && replicaInterface_.data()->isReplicaValid());
+    return connected_;
+}
+
+bool CommonInterfaceUser::addPixmap()
+{
+    if(isSentToGUI()                ||
+       !isConnectedToTheInterface() ||
+       !isPixmapFileValid(dispObj_.pixmapFilename))
+    {
+        return false;
+    }
+
+    sentToGUI_ = true;
+    emit addObjectReq(id_, dispObj_);
+    return true;
+}
+
+bool CommonInterfaceUser::deletePixmap()
+{
+    if(!isSentToGUI() || !isConnectedToTheInterface())
+    {
+        return false;
+    }
+
+    sentToGUI_ = false;
+    emit deleteObjectReq(id_);
+    return true;
+}
+
+void CommonInterfaceUser::updatePixmapPosition(const PositionType pos)
+{
+    dispObj_.pixmapPosition = pos;
+
+    if(sentToGUI_ && isConnectedToTheInterface())
+    {
+        emit updateObjectPositionReq(id_, dispObj_.pixmapPosition);
+    }
+}
+
+bool CommonInterfaceUser::isPixmapFileValid(const QString file) const
+{
+    QFileInfo qfile(file);
+
+    if(!qfile.exists() || !qfile.isFile())
+    {
+        return false;
+    }
+    return true;
 }

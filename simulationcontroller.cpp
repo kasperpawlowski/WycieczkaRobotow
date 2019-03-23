@@ -7,6 +7,11 @@ SimulationController::SimulationController(QObject *parent) :
 
 }
 
+SimulationController::~SimulationController()
+{
+
+}
+
 void SimulationController::startSimulation(const SituationScene *situation)
 {
     // create interface object and host it to the other process
@@ -31,9 +36,13 @@ void SimulationController::startSimulation(const SituationScene *situation)
 
 void SimulationController::stopSimulation()
 {
-    simulation_->kill();
-    simulation_->waitForFinished();
-    delete simulation_;
-    delete interfaceNode_;
-    delete interface_;
+    if(simulation_)
+    {
+        simulation_->kill();
+        simulation_->waitForFinished();
+        delete simulation_;
+        delete interfaceNode_;
+        delete interface_;
+        simulation_ = nullptr;
+    }
 }

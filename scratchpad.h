@@ -66,11 +66,12 @@ public:
     /*!
      * \brief generatePathData generates a file that contains information
      *        about points that form the path being drawn
+     * \param[in] filePath a path to the to be generated file
      * \return true on success, false otherwise
      *
      * Assumes that validity of the path has been checked.
      */
-    bool generatePathData() const;
+    virtual bool generatePathData(const QString filePath) const;
 
 signals:
     /*!
@@ -88,12 +89,12 @@ private:
     Scratchpad() = delete;
     void addPointToPathData(QPoint point);
 
-    std::vector<QPoint> pathData_;
-    QImage              image_;
-    QColor              color_;
-    int                 thickness_;
-    QPoint              lastPosition_;
-    bool                alreadyDrawn_;
+    std::list<QPoint> pathData_;
+    QImage            image_;
+    QColor            color_;
+    int               thickness_;
+    QPoint            lastPosition_;
+    bool              alreadyDrawn_;
 };
 
 #endif // SCRATCHPAD_H
