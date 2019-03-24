@@ -1,6 +1,7 @@
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QDebug>
+#include <QDir>
 #include "scratchpadcontroller.h"
 
 ScratchpadController::ScratchpadController(QWidget *parent) :
@@ -27,8 +28,13 @@ ScratchpadController::ScratchpadController(QWidget *parent) :
 
 void ScratchpadController::acceptButtonClicked()
 {
-    const QString filePath = ".\\simulation\\PathData.txt";
+    const QString filePath = ".\\data\\PathData.txt";
     QFile file(filePath);
+
+    if(!QDir(".\\data").exists())
+    {
+        QDir().mkdir(".\\data");
+    }
 
     if(file.exists())
     {

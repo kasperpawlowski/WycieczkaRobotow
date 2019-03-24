@@ -56,9 +56,13 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
+REPC_SOURCE = common/basesimulationinterface.rep
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-REPC_SOURCE = common/basesimulationinterface.rep
+TARGET = WycieczkaRobotow
+Release:DESTDIR = ..\result
+Debug:DESTDIR   = ..\result

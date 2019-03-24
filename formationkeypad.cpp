@@ -2,6 +2,7 @@
 #include <QDesktopWidget>
 #include <QFile>
 #include <QDebug>
+#include <QDir>
 #include "formationkeypad.h"
 #include "filesgenerator.h"
 
@@ -126,8 +127,13 @@ void FormationKeypad::buttonClicked(const unsigned int /*row*/, const unsigned i
 
 void FormationKeypad::acceptButtonClicked()
 {
-    const QString filePath = ".\\simulation\\FormationData.txt";
+    const QString filePath = ".\\data\\FormationData.txt";
     QFile file(filePath);
+
+    if(!QDir(".\\data").exists())
+    {
+        QDir().mkdir(".\\data");
+    }
 
     if(file.exists())
     {

@@ -16,7 +16,7 @@ class BaseRobot : public CommonInterfaceUser
 {
     Q_OBJECT
 public:
-    enum SIMULATION_SPEED {FAST = 2, MEDIUM = 10, SLOW = 50};
+    enum SIMULATION_SPEED {FAST = 1, MEDIUM = 10, SLOW = 50};
 
     /*!
      * \brief BaseRobot creates a new BaseRobot described by the provided identifier

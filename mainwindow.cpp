@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // create a QGraphicsScene that will be connected to QGraphicsView
     situation_ = new SituationScene(view_, this);
 
+    // get rid of the frame
+    view_->setFrameStyle(QFrame::Box);
+    view_->setLineWidth(0);
+
     // create a layout for all the widgets
     mainLayout_ = new QGridLayout();
     mainLayout_->addWidget(view_, 0, 0, 3, 1);

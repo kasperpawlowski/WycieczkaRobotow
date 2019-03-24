@@ -3,11 +3,12 @@
 #include "mainwindow.h"
 #include "simulationcontroller.h"
 
-const QString simulationPath = ".\\simulation\\SimulationEngine.exe";
+const QString simulationPath = ".\\Simulation.exe";
 const QString interfaceUrl   = "local:simulationInterfaceNode";
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::addLibraryPath(".\\");
     QApplication         app(argc, argv);
     MainWindow           window;
     SimulationController simulation;
