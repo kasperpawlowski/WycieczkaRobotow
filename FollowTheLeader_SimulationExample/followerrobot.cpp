@@ -68,27 +68,31 @@ void FollowerRobot::useOnboardEquipment()
         fromRadioPos_ = currentPos;
     }
 
+    // calculate new desired position
+    desiredPos = fromRadioPos_ + getLeaderRelativeRotatedPos(fromRadioPos_.getA());
+
     // precision controller
     if(currentPos.distanceTo(desiredPos) < getWheelBaseLength()/2.0)
     {
-        // calculate new desired position
-        desiredPos = fromRadioPos_ + getLeaderRelativeRotatedPos(fromRadioPos_.getA());
-
-        // check if we are close to the desired position and if the leader at goal
-        if((currentPos.headingAbsDiff(desiredPos) < 1.0) &&
-            leaderAtGoal_)
+        // if we are close to the desired orientation and if the leader at goal the job is finished
+        if(currentPos.headingAbsDiff(desiredPos) < 1.0)
         {
-            qInfo() << "Follower Robot ID " << getID() << ": travelled " << distance << " meters in " << getLoopCount()*dt << "seconds";
-            qInfo() << "Follower Robot ID " << getID() << ": average speed = " << distance/(getLoopCount()*dt);
-            jobFinished = true;
+            if(leaderAtGoal_)
+            {
+                qInfo() << "Follower Robot ID " << getID() << ": travelled " << distance << " meters in " << getLoopCount()*dt << "seconds";
+                qInfo() << "Follower Robot ID " << getID() << ": average speed = " << distance/(getLoopCount()*dt);
+                jobFinished = true;
+            }
+            else
+            {
+                // if leader still working, don't try to get to the exact position, small error is ok
+                desiredPos = currentPos;
+            }
         }
     }
     // point to point controller
     else
     {
-        // calculate new desired position
-        desiredPos = fromRadioPos_ + getLeaderRelativeRotatedPos(fromRadioPos_.getA());
-
         // if not at desired position, update the desired orientation angle in every step
         // (as the leader robot is moving bearing to the desired point changes)
         desiredPos.setA(getHeadingToNextPoint());

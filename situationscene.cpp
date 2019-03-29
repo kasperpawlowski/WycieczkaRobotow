@@ -75,8 +75,8 @@ void SituationScene::situationRectDimensions()
     setSceneRect(view_->rect().x(), view_->rect().y(), 0.95*view_->rect().width(), 0.95*view_->rect().height());
 
     RectDimensionsType dim;
-    dim.height = view_->rect().height();
-    dim.width  = view_->rect().width();
+    dim.height = int(sceneRect().height());
+    dim.width  = int(sceneRect().width());
     emit situationRectDimensionsInfo(dim);
 }
 

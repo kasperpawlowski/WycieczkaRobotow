@@ -34,8 +34,6 @@ bool RobotsManager::addRobot(const BaseRobot* robot)
                      objects.at(id).thread, SLOT(quit()));
 
     objects.at(id).robot->moveToThread(objects.at(id).thread);
-
-    nothingRunYet = false;
     return true;
 }
 
@@ -46,7 +44,7 @@ bool RobotsManager::robotExists(const int id) const
 
 BaseRobot* RobotsManager::getRobot(const int id) const
 {
-    if(objects.find(id) == objects.end())
+    if(!robotExists(id))
     {
         qCritical() << "Robots Manager: ID = " << id << " invalid, no such a robot";
     }
@@ -60,6 +58,7 @@ void RobotsManager::startRobots()
     {
         it->second.thread->start();
     }
+    nothingRunYet = false;
 }
 
 void RobotsManager::killRobots()

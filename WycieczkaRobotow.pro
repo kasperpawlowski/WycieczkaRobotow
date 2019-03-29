@@ -51,7 +51,6 @@ HEADERS += \
     simulationcontroller.h \
     common/filesgenerator.h \
     common/point.h \
-    common/simulationstarter.h
 
 FORMS += \
         mainwindow.ui

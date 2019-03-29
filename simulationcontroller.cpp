@@ -9,7 +9,7 @@ SimulationController::SimulationController(QObject *parent) :
 
 SimulationController::~SimulationController()
 {
-
+    stopSimulation();
 }
 
 void SimulationController::startSimulation(const SituationScene *situation)

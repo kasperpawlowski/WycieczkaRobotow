@@ -37,8 +37,11 @@ void FollowTheLeaderSimulation::runSimulation()
     {
         RadioDevice *follower_radio = dynamic_cast<FollowerRobot*>(rManager->getRobot(i))->getRadio();
 
-        connect(rManager->getRobot(0), SIGNAL(LeaderAtGoal()), rManager->getRobot(i), SLOT(LeaderAtGoalHandler()));
-        connect(leader_radio, SIGNAL(Transmit(Position)), follower_radio, SLOT(Receive(Position)));
+        connect(rManager->getRobot(0), SIGNAL(LeaderAtGoal()),
+                rManager->getRobot(i), SLOT(LeaderAtGoalHandler()));
+
+        connect(leader_radio,   SIGNAL(Transmit(Position)),
+                follower_radio, SLOT(Receive(Position)));
     }
 
     // pop the first point of the path, all the robots are already there
@@ -114,8 +117,12 @@ void FollowTheLeaderSimulation::createAndFeedFollowers()
         follower.setPixmapSize({int(follower.getWheelBaseLength() * scaleFactor),
                                 int(follower.getWheelBaseLength() * scaleFactor)});
 
-        follower.setInitialPosition(Position(worldPath.front(), 0.0) +
-                                    follower.getLeaderRelativeRotatedPos(0.0));
+        // let's assume that the formation coordinates from the file, describe
+        // the formation in the moment the leaders orientation angle is 0.
+        // therefore if current leaders initial orientation angle is not 0,
+        // then whole formation should be initially rotated
+        follower.setInitialPosition(Position(worldPath.front(), 0.0) +          // <-- current leaders position and orientation
+                                    follower.getLeaderRelativeRotatedPos(0.0)); // <-- current leaders orientation
 
         rManager->addRobot(&follower);
         id++;
